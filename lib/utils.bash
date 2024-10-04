@@ -31,6 +31,7 @@ list_github_tags() {
 
 list_all_versions() {
 	list_github_tags
+    echo "master"
 }
 
 get_platform() {
@@ -74,6 +75,10 @@ get_extname() {
 	echo -n "$extname"
 }
 
+get_version() {
+    echo -n "$(../scripts/version.awk https://github.com/zigtools/zls.git)"
+}
+
 download_release() {
 	local version filename url
 	version="$1"
@@ -81,12 +86,11 @@ download_release() {
 	platform="$(get_platform)"
 	arch="$(get_arch)"
 	extname="$(get_extname "$version")"
-    pre="dev.166"
-    build="$(git ls-remote https://github.com/zigtools/zls.git HEAD | head -c7)"
+    master_version="$(get_version)"
 
 	case "$version" in
 	master)
-		url="https://builds.zigtools.org/zls-${platform}-${arch}-0.14.0-${pre}+${build}.${extname}"
+		url="https://builds.zigtools.org/zls-${platform}-${arch}-${master_version}.${extname}"
 		;;
 	*)
 		url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
