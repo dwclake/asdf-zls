@@ -80,10 +80,11 @@ download_release() {
 	platform="$(get_platform)"
 	arch="$(get_arch)"
 	extname="$(get_extname "$version")"
+    master_hash="$(git ls-remote https://github.com/zigtools/zls.git HEAD | head -c7)"
 
 	case "$version" in
 	master)
-		url="https://builds.zigtools.org/zls-${platform}-${arch}-0.14.0-dev.166+db05a1c.tar.xz"
+		url="https://builds.zigtools.org/zls-${platform}-${arch}-0.14.0-dev.166+{master_hash}.tar.xz"
 		;;
 	*)
 		url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
