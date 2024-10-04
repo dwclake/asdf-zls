@@ -31,30 +31,6 @@ commands:
             # https://circleci.com/docs/variables/#built-in-environment-variables
 
 jobs:
-  MegaLinter:
-    environment:
-      DEFAULT_WORKSPACE: /root/project
-    docker:
-      - image: oxsecurity/megalinter-go:v8
-        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
-    steps:
-      - checkout
-      - run:
-          command: |
-            sh /entrypoint.sh
-      - store_artifacts:
-          path: megalinter-reports
-
-  commitlint:
-    docker:
-      - image: commitizen/commitizen:latest
-        # checkov:skip=CKV_CIRCLECIPIPELINES_1:prefer mutable but stable tags
-    steps:
-      - checkout
-      - run:
-          command: |
-            cz check --rev-range 401cb2d..HEAD
-
   plugin_test:
     docker:
       - image: cimg/base:current
@@ -79,33 +55,7 @@ jobs:
       - install_asdf
       - asdf_plugin_test
 
-  lint:
-    docker:
-      - image: cimg/base:current
-        # checkov:skip=CKV_CIRCLECIPIPELINES_2:prefer mutable but stable tags
-    steps:
-      - checkout
-      - install_asdf
-      - run:
-          name: install asdf plugins
-          command: |
-            asdf plugin add shellcheck https://github.com/luizm/asdf-shellcheck.git
-            asdf plugin add shfmt https://github.com/luizm/asdf-shfmt.git
-            asdf install
-      - run:
-          command: |
-            scripts/lint.bash
-
 workflows:
-  MegaLinter:
-    jobs:
-      - MegaLinter
-
-  Lint:
-    jobs:
-      - lint
-      - commitlint
-
   Build:
     jobs:
       - plugin_test

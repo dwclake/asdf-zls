@@ -81,7 +81,15 @@ download_release() {
 	arch="$(get_arch)"
 	extname="$(get_extname "$version")"
 
-	url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
+	case "$version" in
+	master)
+		url="https://builds.zigtools.org/zls-${platform}-${arch}-0.14.0-dev.166+db05a1c.tar.xz"
+		;;
+	*)
+		url="$GH_REPO/releases/download/${version}/zls-${arch}-${platform}.${extname}"
+		;;
+	esac
+
 
 	case "$version" in
 	0.10.0)
